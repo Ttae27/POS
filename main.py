@@ -1,5 +1,4 @@
 from io import BytesIO
-from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, Response, UploadFile
 from starlette.responses import StreamingResponse
 from sqlalchemy.orm import Session
