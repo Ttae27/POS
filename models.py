@@ -33,5 +33,6 @@ class Item(BaseModel):
     price = Column(Integer)
     quantity = Column(Integer)
 
+
 Base.metadata.create_all(engine)
 
