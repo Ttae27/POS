@@ -32,3 +32,6 @@ def save_transaction(db: Session, items: list[CreateTransaction], amount: int):
     db.commit()
     return "Successfully save transaction!"
 
+def get_items(db: Session):
+    items = db.query(Item).all()
+    return items
