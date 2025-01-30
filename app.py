@@ -1,4 +1,3 @@
-from io import BytesIO
 from sqlalchemy.orm import Session
 from models import Item, Transaction, TransactionDetail
 from promptpay import qrcode
@@ -31,5 +30,5 @@ def save_transaction(db: Session, items: list[CreateTransaction], amount: int):
     db.add_all(all_detail)
     db.add(transaction)
     db.commit()
-    return "OK"
+    return "Successfully save transaction!"
 
