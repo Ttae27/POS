@@ -16,6 +16,7 @@ URL_DATABASE = 'postgresql://' + user + ':' + password + '@' + host + ':' + port
 engine = create_engine(URL_DATABASE)
 sessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
+db = sessionLocal()
 
 def get_db():
     db = sessionLocal()

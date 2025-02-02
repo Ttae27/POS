@@ -12,24 +12,24 @@ class Transaction(BaseModel):
 
     date = Column(Date)
     time = Column(Time)
-    amount = Column(Integer)
+    total = Column(Integer)
     transaction_detail: Mapped[list["TransactionDetail"]] = relationship(back_populates='transaction')
 
 class TransactionDetail(BaseModel):
     __tablename__ = 'transaction_details'
 
     quantity = Column(Integer)
-    total = Column(Integer)
-    item_id = Column(ForeignKey("items.id"))
+    subtotal = Column(Integer)
+    item_barcode = Column(ForeignKey("items.barcode"))
     item: Mapped['Item'] = relationship()
     transaction_id: Mapped[int] = mapped_column(ForeignKey('transactions.id'))
     transaction: Mapped['Transaction'] = relationship(back_populates='transaction_detail')
 
-class Item(BaseModel):
+class Item(Base):
     __tablename__ = 'items'
 
+    barcode = Column(String, primary_key=True) 
     name = Column(String)
-    barcode = Column(String)
     price = Column(Integer)
     quantity = Column(Integer)
 

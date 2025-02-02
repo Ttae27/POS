@@ -13,18 +13,18 @@ def create_qr_payload(total_price: int):
     payload = qrcode.generate_payload(phone_number, total_price)
     return payload
 
-def save_transaction(db: Session, items: list[CreateTransaction], amount: int):
+def save_transaction(db: Session, items: list[CreateTransaction], total: int):
     all_detail = []
     for item in items:
-        kanom = db.query(Item).filter_by(id=item.id).first()
-        trans_detail = TransactionDetail(quantity=item.quantity, total=item.total, item=kanom)
+        kanom = db.query(Item).filter_by(barcode=item.barcode).first()
+        trans_detail = TransactionDetail(quantity=item.quantity, subtotal=item.subtotal, item=kanom)
 
         kanom.quantity -= item.quantity
         db.add(kanom)
 
         all_detail.append(trans_detail)
 
-    transaction = Transaction(date=datetime.now().date(), time=datetime.now().time(), amount=amount)
+    transaction = Transaction(date=datetime.now().date(), time=datetime.now().time(), total=total)
     transaction.transaction_detail.extend(all_detail)
 
     db.add_all(all_detail)
@@ -35,3 +35,13 @@ def save_transaction(db: Session, items: list[CreateTransaction], amount: int):
 def get_items(db: Session):
     items = db.query(Item).all()
     return items
+
+def get_transaction(db: Session, id: int):
+    transaction = db.query(Transaction).filter_by(id = id).all()
+    temp = db.query(TransactionDetail).filter_by(transaction_id=id).all()
+    transaction.extend(temp)
+    return transaction
+
+def get_transactions(db: Session):
+    transaction = db.query(Transaction).all()
+    return transaction

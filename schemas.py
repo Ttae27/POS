@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class CreateTransaction(BaseModel):
-    id: int
+    barcode: str
     quantity: int
-    total: int
+    subtotal: int
