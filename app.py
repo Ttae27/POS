@@ -1,17 +1,13 @@
 from sqlalchemy.orm import Session
 from models import Item, Transaction, TransactionDetail
-from promptpay import qrcode
 from schemas import CreateTransaction
 from datetime import datetime
 
 def get_item(db: Session, code: str):
     item = db.query(Item).filter_by(barcode=code).first()
-    return item
-
-def create_qr_payload(total_price: int):
-    phone_number = "0972525215"
-    payload = qrcode.generate_payload(phone_number, total_price)
-    return payload
+    if item:
+        return item
+    return None
 
 def save_transaction(db: Session, items: list[CreateTransaction], total: int):
     all_detail = []

@@ -33,6 +33,4 @@ class Item(Base):
     price = Column(Integer)
     quantity = Column(Integer)
 
-
 Base.metadata.create_all(engine)
-
