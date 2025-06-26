@@ -14,7 +14,7 @@ def get_all_item(db: Session = Depends(get_db)):
 def scan_barcode(barcode: str, db: Session = Depends(get_db)):
     return get_item(db, barcode)
 
-@app.post("/transac")
+@app.post("/transaction")
 def trans(transac: list[CreateTransaction], db: Session = Depends(get_db)):
     return save_transaction(db, transac)
 
