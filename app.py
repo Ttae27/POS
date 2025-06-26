@@ -9,24 +9,24 @@ def get_item(db: Session, code: str):
         return item
     return None
 
-def save_transaction(db: Session, items: list[CreateTransaction], total: int):
-    all_detail = []
-    for item in items:
-        kanom = db.query(Item).filter_by(barcode=item.barcode).first()
-        trans_detail = TransactionDetail(quantity=item.quantity, subtotal=item.subtotal, item=kanom)
+def save_transaction(db: Session, transactions: list[CreateTransaction]):
+    for transaction in transactions:
+        detail_list = []
+        for detail in transaction.details:
+            kanom = db.query(Item).filter_by(barcode=detail.barcode).first()
+            kanom.quantity -= detail.quantity
+            db.add(kanom)
 
-        kanom.quantity -= item.quantity
-        db.add(kanom)
+            trans_detail = TransactionDetail(quantity=detail.quantity, subtotal=detail.subtotal, item=kanom)
+            detail_list.append(trans_detail)
+        trans = Transaction(date=transaction.date, time=transaction.time, total=transaction.total)
+        trans.transaction_detail.extend(detail_list)
 
-        all_detail.append(trans_detail)
-
-    transaction = Transaction(date=datetime.now().date(), time=datetime.now().time(), total=total)
-    transaction.transaction_detail.extend(all_detail)
-
-    db.add_all(all_detail)
-    db.add(transaction)
+        db.add_all(detail_list)
+        db.add(trans)
     db.commit()
-    return "Successfully save transaction!"
+
+    return "Successfully save transaction"
 
 def get_items(db: Session):
     items = db.query(Item).all()
