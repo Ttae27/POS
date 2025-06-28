@@ -1,13 +1,7 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from models import Item, Transaction, TransactionDetail
 from schemas import CreateTransaction
-from datetime import datetime
-
-def get_item(db: Session, code: str):
-    item = db.query(Item).filter_by(barcode=code).first()
-    if item:
-        return item
-    return None
 
 def save_transaction(db: Session, transactions: list[CreateTransaction]):
     for transaction in transactions:
@@ -34,10 +28,17 @@ def get_items(db: Session):
 
 def get_transaction(db: Session, id: int):
     transaction = db.query(Transaction).filter_by(id = id).all()
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
     temp = db.query(TransactionDetail).filter_by(transaction_id=id).all()
+    if not temp:
+        raise HTTPException(status_code=404, detail="Transaction  not found")
+    
     transaction.extend(temp)
     return transaction
 
 def get_transactions(db: Session):
     transaction = db.query(Transaction).all()
+
     return transaction
