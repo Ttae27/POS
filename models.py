@@ -32,5 +32,7 @@ class Item(Base):
     name = Column(String)
     price = Column(Integer)
     quantity = Column(Integer)
+    cost_per_pack = Column(Integer)
+    quantity_per_pack = Column(Integer)
 
 Base.metadata.create_all(engine)
